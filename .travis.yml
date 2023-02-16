@@ -1,0 +1,16 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t farzana/react-test -f ./client/Dockerfile.dev ./client
+
+  script:
+    - docker run -e CI=true farzana/react-test npm test 
+
+  after_success:
+    - docker build -t farzana/multi-client ./client
+    - docker build -t farzana/multi-nginx ./nginx
+    - docker build -t farzana/multi-server ./server
+    - docker build -t farzana/multi-worker ./worker
+
